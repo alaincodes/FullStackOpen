@@ -37,11 +37,16 @@ const Statistics = props => {
           <Statistic text="bad:" value={bad} />
           <Statistic text="all:" value={totalFeed} />
           <Statistic text="average:" value={average.toFixed(1)} />
-          <Statistic text="positive:" value={positive.toFixed(1)} />
+          <Statistic text="positive:" value={`${positive.toFixed(1)}%`} />
         </tbody>
       </table>
     </>
   );
+};
+
+const Button = props => {
+  const { text, onClick } = props;
+  return <button onClick={onClick}>{text}</button>;
 };
 
 const App = () => {
@@ -64,9 +69,9 @@ const App = () => {
   return (
     <div>
       <h1>Give feedback</h1>
-      <button onClick={handleGoodClick}>good</button>
-      <button onClick={handleNeutralClick}>neutral</button>
-      <button onClick={handleBadClick}>bad</button>
+      <Button onClick={handleGoodClick} text="good" />
+      <Button onClick={handleNeutralClick} text="neutral" />
+      <Button onClick={handleBadClick} text="bad" />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
