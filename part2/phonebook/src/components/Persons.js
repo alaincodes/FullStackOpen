@@ -3,9 +3,9 @@ import React from "react";
 const Persons = ({ persons }) => {
   return (
     <>
-      {persons.map(person => (
-        <p key={person.id}>
-          {person.name} {person.number}
+      {persons.map(human => (
+        <p key={human.name.toString()}>
+          {human.name} {human.number}
         </p>
       ))}
     </>
