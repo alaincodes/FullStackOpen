@@ -20,6 +20,13 @@ const App = () => {
     return person.name.toLowerCase().indexOf(searchName.toLowerCase()) !== -1;
   });
 
+  const deletePersonBtn = id => {
+    personService.deletePerson(id).then(() => {
+      const updatePersons = persons.filter(p => p.id !== id);
+      setPersons(updatePersons);
+    });
+  };
+
   const addName = event => {
     event.preventDefault();
 
@@ -28,9 +35,23 @@ const App = () => {
     });
 
     if (checkExistingName.length === 1) {
-      alert(`${newName} is already in your phonebook`);
-      setNewName("");
-      setNewNumber("");
+      const confirmWindow = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one ?`
+      );
+      if (confirmWindow) {
+        personService
+          .update(checkExistingName[0].id, {
+            ...checkExistingName[0],
+            number: newNumber
+          })
+          .then(updatedPerson => {
+            let updated = persons.filter(p => p.id !== updatedPerson.id);
+            updated = [...updated, updatedPerson];
+            setPersons(updated);
+            setNewName("");
+            setNewNumber("");
+          });
+      }
     } else {
       const nameObject = {
         name: newName,
@@ -75,6 +96,7 @@ const App = () => {
         persons={filteredName}
         name={persons.name}
         number={persons.number}
+        deletePersonBtn={deletePersonBtn}
       />
     </div>
   );
