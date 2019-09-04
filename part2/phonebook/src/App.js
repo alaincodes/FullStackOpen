@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
-import axios from "axios";
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,8 +11,8 @@ const App = () => {
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response => {
-      setPersons(response.data);
+    personService.getAll().then(initialPersons => {
+      setPersons(initialPersons);
     });
   }, []);
 
@@ -34,13 +34,14 @@ const App = () => {
     } else {
       const nameObject = {
         name: newName,
-        number: newNumber,
-        id: persons.length + 1
+        number: newNumber
       };
 
-      setPersons(persons.concat(nameObject));
-      setNewName("");
-      setNewNumber("");
+      personService.create(nameObject).then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
     }
   };
 
@@ -70,6 +71,7 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <Persons
+        key={persons.id}
         persons={filteredName}
         name={persons.name}
         number={persons.number}

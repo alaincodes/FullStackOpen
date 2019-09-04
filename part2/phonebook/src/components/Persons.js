@@ -4,9 +4,12 @@ const Persons = ({ persons }) => {
   return (
     <>
       {persons.map(human => (
-        <p key={human.name.toString()}>
-          {human.name} {human.number}
-        </p>
+        <>
+          <p>
+            {human.name} {human.number}
+            <button>delete</button>
+          </p>
+        </>
       ))}
     </>
   );
