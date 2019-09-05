@@ -3,18 +3,29 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("add new name..");
   const [newNumber, setNewNumber] = useState("add number...");
   const [searchName, setSearchName] = useState("");
+  const [notificationMsg, setNotificationMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     personService.getAll().then(initialPersons => {
       setPersons(initialPersons);
     });
   }, []);
+
+  const added = (name, data) => {
+    let isAdded = data.find(elm => elm.name === name);
+    if (isAdded === undefined) {
+      return false;
+    }
+    return true;
+  };
 
   let filteredName = persons.filter(person => {
     return person.name.toLowerCase().indexOf(searchName.toLowerCase()) !== -1;
@@ -50,6 +61,18 @@ const App = () => {
             setPersons(updated);
             setNewName("");
             setNewNumber("");
+            setNotificationMsg(`Added ${updatedPerson.name}`);
+            setTimeout(() => {
+              setNotificationMsg(null);
+            }, 2000);
+          })
+          .catch(error => {
+            setErrorMsg(
+              `Information of ${newName} has already been removed from server`
+            );
+            setTimeout(() => {
+              setErrorMsg(null);
+            }, 5000);
           });
       }
     } else {
@@ -58,11 +81,29 @@ const App = () => {
         number: newNumber
       };
 
-      personService.create(nameObject).then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
-      });
+      personService
+        .create(nameObject)
+        .then(returnedPerson => {
+          if (added(newName, persons)) {
+            alert(`${newName} is already added to phonebook`);
+          } else {
+            setPersons([...persons, { name: newName, number: newNumber }]);
+          }
+          setNotificationMsg(`Added ${newName}`);
+          setTimeout(() => {
+            setNotificationMsg(null);
+          }, 2000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch(error => {
+          setErrorMsg(
+            `Information of ${newName} has already been removed from server`
+          );
+          setTimeout(() => {
+            setErrorMsg(null);
+          }, 5000);
+        });
     }
   };
 
@@ -81,6 +122,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMsg} />
+      <Notification type={"error"} message={errorMsg} />
       Search:
       <Filter searchName={searchName} handleSearchChange={handleSearchChange} />
       <PersonForm
