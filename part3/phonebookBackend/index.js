@@ -4,14 +4,15 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
 app.use(bodyParser.json());
+// app.use(express.json());
+
+morgan.token("body", function(req) {
+  return JSON.stringify(req.body);
+});
 
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
-
-morgan.token("body", function(req, res) {
-  return JSON.stringify(req.body);
-});
 
 let persons = [
   {
@@ -47,7 +48,7 @@ app.get("/api/persons/:id", (req, res) => {
   if (person) {
     res.json(person);
   } else {
-    res.status(404).end();
+    res.status(404).end("404 Not Found - Sorry, we cannot find that!");
   }
 });
 
@@ -55,7 +56,7 @@ app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter(person => person.id !== id);
 
-  res.status(204).end();
+  res.status(204).end("204 No Content");
 });
 
 const generateID = max => {
@@ -89,7 +90,9 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.get("/info", (req, res) => {
-  res.send(`Phonebook has info for ${persons.length} people ${new Date()}`);
+  res.send(
+    `Phonebook has info for ${persons.length} people <br> ${new Date()}`
+  );
 });
 
 const PORT = 3001;
