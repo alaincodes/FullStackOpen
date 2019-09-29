@@ -11,14 +11,12 @@ const Persons = ({ persons, deletePersonBtn }) => {
   return (
     <>
       {persons.map(human => (
-        <>
-          <p key={human.id}>
-            {human.name} {human.number}
-            <button onClick={() => windowConfirm(human.id, human.name)}>
-              delete
-            </button>
-          </p>
-        </>
+        <p key={human.id}>
+          {human.name} {human.number}
+          <button onClick={() => windowConfirm(human.id, human.name)}>
+            delete
+          </button>
+        </p>
       ))}
     </>
   );

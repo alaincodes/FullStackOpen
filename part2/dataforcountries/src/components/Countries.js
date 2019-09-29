@@ -8,7 +8,7 @@ const Countries = ({ countries }) => {
   return (
     <>
       {countries.map(country => (
-        <>
+        <div key={country.numericCode}>
           <h2>
             {country.name} <button>show</button>
           </h2>
@@ -16,13 +16,13 @@ const Countries = ({ countries }) => {
           <p>population {country.population}</p>
           <h3>languages</h3>
           <ul>
-            {country.languages.map(lang => (
-              <li>{lang.name}</li>
+            {country.languages.map((lang, index) => (
+              <li key={index}>{lang.name}</li>
             ))}
           </ul>
           <img width="200" src={country.flag} alt="" />
           <Weather city={country.capital} />
-        </>
+        </div>
       ))}
     </>
   );

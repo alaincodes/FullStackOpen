@@ -6,7 +6,7 @@ const cors = require("cors");
 
 app.use(bodyParser.json());
 app.use(cors());
-// app.use(express.json());
+app.use(express.static("build"));
 
 morgan.token("body", function(req) {
   return JSON.stringify(req.body);
@@ -97,7 +97,7 @@ app.get("/info", (req, res) => {
   );
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
 });

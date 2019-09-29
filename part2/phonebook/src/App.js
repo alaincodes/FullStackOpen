@@ -120,7 +120,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <>
       <h2>Phonebook</h2>
       <Notification message={notificationMsg} />
       <Notification type={"error"} message={errorMsg} />
@@ -141,7 +141,7 @@ const App = () => {
         number={persons.number}
         deletePersonBtn={deletePersonBtn}
       />
-    </div>
+    </>
   );
 };
 
